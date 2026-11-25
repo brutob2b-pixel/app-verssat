@@ -265,12 +265,12 @@ const ic={
   cam:'<svg viewBox="0 0 24 24" class="ic"><rect x="3" y="6" width="18" height="14" rx="3"/><circle cx="12" cy="13" r="4"/><path d="M8 6l1.5-2h5L16 6"/></svg>'
 };
 const logo=(t)=>`<div class="logo"><img src="${EST}" alt="">GRUPO VERSSAT</div>`;
-const photo=(desc,img)=>img?`<div class="photo" style="background:#222 url(img/site/${img}.webp) center/cover no-repeat"></div><div class="shade"></div>`:`<div class="photo"><div class="ph">${ic.cam}<span>Foto real a produzir:<br>${desc}</span></div></div><div class="shade"></div>`;
+const photo=(desc,img,lbl,top)=>img?`<div class="photo" style="background:#222 url(img/site/${img}.webp) center/cover no-repeat"></div><div class="shade"></div>`:`<div class="photo"><div class="ph" style="${top?'top:'+top:''}">${ic.cam}<span>${lbl||'Foto real a produzir:'}<br>${desc}</span></div></div><div class="shade"></div>`;
 const flag=o=>o.flag?`<div class="flagart">${o.flag}</div>`:'';
 
 /* modelos de arte */
 const A={
-  cover:(o)=>`<div class="slide ${o.v?'v ':''}${o.th||'dk'}">${o.img?photo('',o.img):''}${flag(o)}<div class="cut ${o.cut||'tl'}"></div><div class="s-in"><div class="ey">${o.ey}</div><div class="t1">${o.t}</div>${o.tx?`<div class="tx">${o.tx}</div>`:''}<div class="spacer"></div></div>${logo()}${o.swipe?'<div class="swipe">arraste →</div>':''}</div>`,
+  cover:(o)=>`<div class="slide ${o.v?'v ':''}${o.th||'dk'}">${(o.img||o.ph)?photo(o.ph||'',o.img,'Imagem ilustrativa a gerar:','68%'):''}${flag(o)}<div class="cut ${o.cut||'tl'}"></div><div class="s-in"><div class="ey">${o.ey}</div><div class="t1">${o.t}</div>${o.tx?`<div class="tx">${o.tx}</div>`:''}<div class="spacer"></div></div>${logo()}${o.swipe?'<div class="swipe">arraste →</div>':''}</div>`,
   item:(o)=>`<div class="slide ${o.th||'lt'}"><div class="cut ${o.cut||'br'}"></div><div class="s-in"><div class="num">${o.n}</div><div class="t2">${o.t}</div><div class="tx">${o.tx}</div><div class="spacer"></div></div>${logo()}</div>`,
   step:(o)=>`<div class="slide ${o.th||'dk'}"><div class="cut ${o.cut||'br'}"></div><div class="s-in"><div class="ey">${o.ey}</div><div class="clock">${o.h}</div><div class="t2">${o.t}</div><div class="tx">${o.tx}</div><div class="spacer"></div></div>${logo()}</div>`,
   photo:(o)=>`<div class="slide dk">${photo(o.desc,o.img)}${flag(o)}<div class="s-in"><div class="stamp"><b>${o.h}</b>${o.place}</div><div class="spacer"></div><div class="t2">${o.t}</div></div><div class="cut br"></div>${logo()}</div>`,
@@ -428,7 +428,7 @@ const CAL=[
 {id:21,d:'2027-01-22',f:'Reels 15 s',p:'Davi',t:'Davi explica: ronda registrada',i:'Ronda registrada é ronda com hora, lugar e prova. O Davi explica em 15 segundos.',c:'Comentar',davi:1},
 {id:22,d:'2027-01-25',f:'Foto',p:'Gente',t:'São Paulo, 473 anos. E a gente no posto.',i:'A cidade dorme e acorda com gente cuidando dela. Parabéns, São Paulo. [confirmar cidades]',c:'Comentar',img:'05-gestor-empresa-card'},
 {id:23,d:'2027-01-27',f:'Carrossel 6',p:'Guia',t:'Limpeza: a frequência certa por área',i:'Hall, elevador, garagem, academia, salão e lixeira: o que é diário, semanal e mensal.',c:'Salvar',img:'limpeza_15'},
-{id:24,d:'2027-01-29',f:'Carrossel 6',p:'Prova',t:'Central de monitoramento: quem está olhando às 3h',i:'A central 24 h da Verssat acompanha alarmes, câmeras e totens em tempo real e aciona o supervisor e o vigilante na hora. Enquanto o prédio dorme, alguém está olhando.',c:'WhatsApp',img:'07-portaria-com-monitores'},
+{id:24,d:'2027-01-29',f:'Carrossel 6',p:'Prova',t:'Central de monitoramento: quem está olhando às 3h',i:'A central 24 h da Verssat acompanha em tempo real os totens com câmeras e análise por inteligência artificial e aciona o supervisor e o vigilante na hora. Enquanto o prédio dorme, alguém está olhando.',c:'WhatsApp',ph:'central de monitoramento (prompt no calendário)'},
 {id:25,d:'2027-02-01',f:'Foto',p:'Gente',t:'Reciclagem: vigilante também estuda',i:'Atualização constante da equipe: procedimentos, atendimento e primeiros socorros.',c:'Comentar',img:'08-aula-da-academia'},
 {id:26,d:'2027-02-03',f:'Carrossel 6',p:'Guia',t:'Carnaval no condomínio',i:'Festa no salão, som alto, visitantes, garagem lotada e escala de folga. O que combinar antes do feriado.',c:'Salvar',img:'12-condominios'},
 {id:27,d:'2027-02-05',f:'Foto',p:'O turno',t:'Escala de Carnaval fechada',i:'Feriado não deixa posto vazio. A escala é fechada antes, com reserva definida.',c:'Comentar',img:'03-supervisor-visita'},
@@ -439,7 +439,7 @@ const CAL=[
 {id:32,d:'2027-02-17',f:'Foto',p:'O turno',t:'08:00, recepção corporativa',i:'O primeiro atendimento do dia na empresa: crachá, agenda de visitantes e controle de acesso.',c:'Comentar',img:'empresas_16'},
 {id:33,d:'2027-02-19',f:'Reels 20 s',p:'Davi',t:'Davi responde os comentários',i:'O Davi responde três perguntas deixadas no perfil.',c:'Comentar',davi:1},
 {id:34,d:'2027-02-22',f:'Carrossel 6',p:'Guia',t:'4 golpes comuns na portaria',i:'Falso entregador, falso técnico, “o morador autorizou” e visita sem confirmação. Como a portaria evita cada um.',c:'Salvar e enviar',img:'13-portaria'},
-{id:35,d:'2027-02-24',f:'Carrossel 6',p:'Guia',t:'Totem de monitoramento: quando vale a pena',i:'Como o totem funciona ligado à central, onde instalar, o que ele não substitui e quando faz sentido junto com a portaria.',c:'WhatsApp'},
+{id:35,d:'2027-02-24',f:'Carrossel 6',p:'Guia',t:'Totem de monitoramento: quando vale a pena',i:'Câmeras com análise por inteligência artificial, luz e sirene, ligadas à central 24 h. Onde instalar e por que ele complementa a portaria e a vigilância, sem substituir.',c:'WhatsApp'},
 {id:36,d:'2027-02-26',f:'Imagem',p:'Prova',t:'Fevereiro em números',i:'Visitas de supervisão, faltas cobertas e ocorrências resolvidas no mês. [confirmar números]',c:'WhatsApp'},
 {id:37,d:'2027-03-01',f:'Foto',p:'Gente',t:'Mais de 5 anos de casa',i:'Homenagem a quem está com a gente há mais tempo, com nome e foto real.',c:'Comentar',img:'01-porteiro-noite-saindo',flag:'Ilustrativa: trocar por foto real do colaborador',real:1},
 {id:38,d:'2027-03-03',f:'Carrossel 6',p:'Guia',t:'Trocar de fornecedor sem deixar o prédio descoberto',i:'Transição em 30 dias: levantamento, escala, sobreposição de equipes e apresentação aos moradores.',c:'WhatsApp',img:'04-sindica-card'},
@@ -453,7 +453,7 @@ CAL.forEach((x,k)=>{
   if(x.davi){sl=[A.davi({v:true,tc:'CENA 1',ey:'Davi explica',t:x.t}),A.davi({v:true,tc:'CENA 2',ey:'Davi explica',t:x.i.split('.')[0]+'.',th:'lt'})]}
   else if(reel){sl=[A.scene({i:1,tc:'capa',t:x.t,img:x.img}),A.cover({v:true,ey:'Fechamento',t:'Tudo no lugar. <span class="gold">Sempre.</span>',cut:'br'})]}
   else if(x.f==='Imagem'){sl=[A.bignum({ey:x.p,n:'—',t:x.t+' [confirmar]'})]}
-  else if(x.img){sl=[A.cover({ey:x.p,t:x.t,img:x.img,flag:x.flag,swipe:car,cut:'br'})]}
+  else if(x.img||x.ph){sl=[A.cover({ey:x.p,t:x.t,img:x.img,ph:x.ph,flag:x.flag,swipe:car,cut:'br'})]}
   else if(x.real){sl=[A.photo({h:'Depoimento',place:'cliente real',t:x.t,desc:'foto real do síndico, com autorização'})]}
   else{sl=[A.cover({ey:x.p,t:x.t,th:THS[k%3],swipe:car})]}
   if(car){sl.push(A.item({n:'01',t:'Em resumo',tx:x.i}));sl.push(A.cta({ey:'Próximo passo',t:x.c.startsWith('Salvar')?'Salve e compartilhe.':'Vamos conversar?',tx:CTA[x.c]||'',btn:x.c==='WhatsApp'?'Chamar no WhatsApp':x.c}))}
