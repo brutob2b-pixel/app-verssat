@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Instagram Verssat simulado</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: celular simulado à esquerda (fixo no desktop), editorial completo à direita; artes dos posts em ouro e grafite da marca, geometria da estrela */
+:root{
+  --bg:#efede8; --paper:#ffffff; --fg:#1f1e1c; --muted:#6c6963; --line:#dddad3;
+  --gold:#E3A50E; --gold-d:#BC890B; --gold-ink:#8a6306; --graf:#1c1c1f; --graf-2:#2a2a2e; --cinza:#929292; --off:#f5f3ee;
+  --ig-bg:#ffffff; --ig-fg:#111; --ig-muted:#737373; --ig-line:#efefef; --ig-btn:#efefef;
+  --warn:#9a4a12; --warn-bg:#fdeee2;
+  --display:"Outfit",system-ui,sans-serif; --body:"Figtree",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141416; --paper:#1d1d21; --fg:#ecebe7; --muted:#a29f99; --line:#303036; --gold-ink:#E3A50E;
+  --ig-bg:#000; --ig-fg:#f5f5f5; --ig-muted:#a8a8a8; --ig-line:#262626; --ig-btn:#262626;
+  --warn:#f3a46c; --warn-bg:#3a2516; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141416; --paper:#1d1d21; --fg:#ecebe7; --muted:#a29f99; --line:#303036; --gold-ink:#E3A50E;
+  --ig-bg:#000; --ig-fg:#f5f5f5; --ig-muted:#a8a8a8; --ig-line:#262626; --ig-btn:#262626;
+  --warn:#f3a46c; --warn-bg:#3a2516; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 72px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:28px}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.15;text-wrap:balance}
+p{margin:0}
+.top{display:grid;gap:8px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.top h1{font-size:clamp(28px,4vw,40px)}
+.top p{color:var(--muted);max-width:70ch}
+.flag{display:inline-flex;gap:6px;align-items:center;font-size:12px;font-weight:600;color:var(--warn);background:var(--warn-bg);border-radius:6px;padding:2px 8px}
+.cols{display:grid;grid-template-columns:400px minmax(0,1fr);gap:40px;align-items:start}
+@media (max-width:900px){.cols{grid-template-columns:minmax(0,1fr)}}
+.phonecol{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);display:grid;gap:10px;justify-items:center}
+@media (max-width:900px){.phonecol{position:static}}
+.hint{font-size:13px;color:var(--muted);text-align:center}
+
+/* ===== celular ===== */
+.phone{width:100%;max-width:390px;height:780px;max-height:calc(100vh - 80px);min-height:560px;background:var(--ig-bg);color:var(--ig-fg);border:10px solid #0d0d0f;border-radius:44px;overflow:hidden;position:relative;box-shadow:0 30px 60px -30px rgba(0,0,0,.45)}
+.screen{position:absolute;inset:0;overflow-y:auto;scrollbar-width:none}
+.screen::-webkit-scrollbar{display:none}
+.bar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 6px;font-weight:700;font-size:17px;position:sticky;top:0;background:var(--ig-bg);z-index:3}
+.bar .u{display:flex;gap:6px;align-items:center}
+.bar svg{width:22px;height:22px}
+.ic{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.verified{width:14px;height:14px;border-radius:50%;background:#3897f0;display:inline-grid;place-items:center;color:#fff;font-size:9px}
+.prof{padding:6px 16px 0;display:grid;gap:10px}
+.prow{display:grid;grid-template-columns:86px 1fr;gap:18px;align-items:center}
+.ava{width:86px;height:86px;border-radius:50%;padding:3px;background:conic-gradient(var(--gold),var(--gold-d),var(--cinza),var(--gold))}
+.ava div{width:100%;height:100%;border-radius:50%;background:var(--graf);display:grid;place-items:center;border:3px solid var(--ig-bg)}
+.ava img{width:62%}
+.stats{display:flex;justify-content:space-between;text-align:center;font-size:13px}
+.stats b{display:block;font-size:16px}
+.nm{font-weight:600;font-size:14px}
+.cat{color:var(--ig-muted);font-size:13px}
+.bio{font-size:14px;white-space:pre-line;line-height:1.35}
+.lnk{color:#4f7bd9;font-weight:600;font-size:14px}
+.btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.btn{background:var(--ig-btn);border-radius:8px;text-align:center;font-size:13px;font-weight:600;padding:7px 4px;border:0;color:inherit;font-family:inherit;cursor:pointer}
+.hls{display:flex;gap:14px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none}
+.hl{flex:0 0 auto;display:grid;gap:4px;justify-items:center;font-size:12px;width:64px;background:none;border:0;color:inherit;font-family:inherit;cursor:pointer;padding:0}
+.hl i{width:62px;height:62px;border-radius:50%;border:1px solid var(--ig-line);padding:3px;display:block}
+.hl i span{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:var(--graf);color:var(--gold);font-family:var(--display);font-weight:700;font-size:13px;font-style:normal}
+.tabs{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--ig-line)}
+.tab{padding:10px;display:grid;place-items:center;background:none;border:0;color:var(--ig-muted);cursor:pointer;border-bottom:1px solid transparent}
+.tab[aria-selected="true"]{color:var(--ig-fg);border-bottom-color:var(--ig-fg)}
+.tab svg{width:22px;height:22px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.grid.reels{grid-template-columns:repeat(3,1fr)}
+.tile{position:relative;aspect-ratio:3/4;overflow:hidden;border:0;padding:0;cursor:pointer;background:var(--graf);container-type:inline-size}
+.grid.reels .tile{aspect-ratio:9/16}
+.tile .art{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);aspect-ratio:4/5}
+.grid.reels .tile .art{aspect-ratio:9/16;top:0;transform:none;height:100%}
+.tile .badge{position:absolute;top:6px;right:6px;width:16px;height:16px;color:#fff;filter:drop-shadow(0 0 2px rgba(0,0,0,.6));z-index:2}
+.tile .pinb{position:absolute;top:6px;right:26px;width:15px;height:15px;color:#fff;filter:drop-shadow(0 0 2px rgba(0,0,0,.6));z-index:2}
+.tile:focus-visible{outline:3px solid var(--gold);outline-offset:-3px}
+.nav{position:sticky;bottom:0;display:flex;justify-content:space-around;padding:10px 0 14px;background:var(--ig-bg);border-top:1px solid var(--ig-line);margin-top:24px}
+.nav svg{width:24px;height:24px}
+
+/* post aberto */
+.postv{position:absolute;inset:0;background:var(--ig-bg);z-index:5;overflow-y:auto;scrollbar-width:none}
+.postv .bar{font-size:16px}
+.back{background:none;border:0;color:inherit;cursor:pointer;padding:4px;display:grid}
+.phead{display:flex;align-items:center;gap:10px;padding:8px 12px;font-size:14px;font-weight:600}
+.mini{width:32px;height:32px;border-radius:50%;background:var(--graf);display:grid;place-items:center}
+.mini img{width:62%}
+.phead small{display:block;font-weight:400;color:var(--ig-muted);font-size:12px}
+.carousel{position:relative;overflow:hidden;background:var(--graf)}
+.track{display:flex;transition:transform .35s ease}
+.track>.slide{flex:0 0 100%}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;border:0;background:rgba(255,255,255,.85);color:#111;font-size:16px;cursor:pointer;display:grid;place-items:center;z-index:2}
+.arrow.l{left:8px}.arrow.r{right:8px}
+.count{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;border-radius:12px;padding:2px 8px;z-index:2}
+.dots{display:flex;gap:4px;justify-content:center;padding:8px}
+.dots i{width:6px;height:6px;border-radius:50%;background:var(--ig-line)}
+.dots i.on{background:#3897f0}
+.acts{display:flex;gap:14px;padding:4px 12px}
+.acts svg{width:24px;height:24px}
+.acts .sp{flex:1}
+.cap{padding:6px 12px 8px;font-size:14px;white-space:pre-line;line-height:1.4}
+.cap b{font-weight:600}
+.tags{color:#4f7bd9}
+.when{padding:0 12px 16px;color:var(--ig-muted);font-size:12px}
+.reelnote{padding:6px 12px;font-size:12px;color:var(--ig-muted)}
+
+/* ===== artes (1080x1350 escaladas por cqw) ===== */
+.slide{position:relative;aspect-ratio:4/5;overflow:hidden;container-type:inline-size;font-family:var(--display);color:#fff;background:var(--graf)}
+.slide.v{aspect-ratio:9/16}
+.slide *{position:relative}
+.s-in{position:absolute;inset:0;padding:8cqw 8cqw 17cqw;display:flex;flex-direction:column;z-index:2}
+.dk{background:var(--graf)}
+.lt{background:var(--off);color:var(--graf)}
+.gd{background:var(--gold);color:var(--graf)}
+.cut{position:absolute;inset:0;pointer-events:none}
+.cut.tl{background:var(--gold);clip-path:polygon(0 0,34% 0,0 27%)}
+.cut.br{background:var(--gold);clip-path:polygon(100% 100%,100% 70%,62% 100%)}
+.cut.brg{background:var(--graf);clip-path:polygon(100% 100%,100% 70%,62% 100%)}
+.cut.band{background:linear-gradient(90deg,var(--gold),var(--gold-d));clip-path:polygon(0 78%,100% 58%,100% 66%,0 86%)}
+.logo{position:absolute;left:8cqw;bottom:6.5cqw;display:flex;align-items:center;gap:1.8cqw;font-family:var(--display);font-weight:700;font-size:3.1cqw;letter-spacing:.14em;z-index:2}
+.logo img{width:6cqw}
+.lt .logo{color:var(--graf)}
+.gd .logo{color:var(--graf)}
+.ey{font-size:3.3cqw;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--gold)}
+.lt .ey{color:var(--gold-d)}
+.gd .ey{color:var(--graf)}
+.t1{font-size:10.5cqw;font-weight:800;line-height:1.02;letter-spacing:-.01em;margin-top:3cqw;text-wrap:balance}
+.t2{font-size:7.4cqw;font-weight:700;line-height:1.08;margin-top:2.5cqw;text-wrap:balance}
+.tx{font-family:var(--body);font-size:4.2cqw;line-height:1.38;margin-top:4cqw;opacity:.92;max-width:84cqw}
+.gold{color:var(--gold)}
+.lt .gold{color:var(--gold-d)}
+.big{font-size:40cqw;font-weight:800;line-height:.9;color:var(--gold);letter-spacing:-.03em}
+.num{font-size:16cqw;font-weight:800;color:var(--gold);line-height:1}
+.lt .num{color:var(--gold-d)}
+.stamp{display:inline-flex;align-self:flex-start;gap:2cqw;align-items:center;background:rgba(0,0,0,.55);border:.3cqw solid var(--gold);border-radius:1.4cqw;padding:1.6cqw 3cqw;font-size:4cqw;font-weight:700}
+.stamp b{color:var(--gold)}
+.photo{position:absolute;inset:0;background:
+  radial-gradient(120% 80% at 70% 30%,rgba(227,165,14,.18),transparent 60%),
+  repeating-linear-gradient(135deg,rgba(255,255,255,.035) 0 2px,transparent 2px 9px),
+  linear-gradient(160deg,#3b3a3f,#1a1a1d 70%)}
+.photo .ph{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:70cqw;text-align:center;font-family:var(--body);font-size:3.6cqw;color:rgba(255,255,255,.7);display:grid;gap:2cqw;justify-items:center}
+.photo .ph svg{width:12cqw;height:12cqw;opacity:.6}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15),transparent 35%,rgba(0,0,0,.75))}
+.spacer{flex:1}
+.pill{display:inline-block;align-self:flex-start;background:var(--gold);color:var(--graf);font-weight:700;font-size:4cqw;border-radius:10cqw;padding:2cqw 4.5cqw;margin-top:5cqw}
+.list{display:grid;gap:3.4cqw;margin-top:5cqw}
+.li{display:grid;grid-template-columns:11cqw 1fr;gap:3cqw;align-items:start;font-family:var(--body);font-size:4.1cqw;line-height:1.3}
+.li b{font-family:var(--display);font-size:7cqw;color:var(--gold);line-height:1}
+.lt .li b{color:var(--gold-d)}
+.tc{font-family:ui-monospace,Menlo,monospace;font-size:3.4cqw;color:var(--gold);letter-spacing:.06em}
+.clock{font-size:20cqw;font-weight:800;line-height:1;letter-spacing:-.02em}
+.swipe{position:absolute;right:8cqw;bottom:7cqw;font-family:var(--body);font-size:3.4cqw;opacity:.8;z-index:2}
+.davi{position:absolute;right:-16cqw;bottom:0;height:76%;z-index:1}
+.balloon{background:#fff;color:var(--graf);border-radius:4cqw 4cqw 4cqw 0;padding:4cqw 5cqw;font-size:7cqw;font-weight:700;line-height:1.1;max-width:72cqw;margin-top:4cqw;box-shadow:0 1cqw 4cqw rgba(0,0,0,.25)}
+.flagart{position:absolute;left:3cqw;top:3cqw;z-index:4;background:#fff3;backdrop-filter:blur(2px);color:#fff;font-family:var(--body);font-size:2.8cqw;border-radius:1cqw;padding:.8cqw 2cqw}
+.v .s-in{padding:9cqw 8cqw 12cqw}
+.v .t1{font-size:12cqw}
+.v .clock{font-size:26cqw}
+
+/* ===== editorial ===== */
+.ed{display:grid;gap:28px;min-width:0}
+.edhead{display:grid;gap:10px}
+.edhead h2{font-size:26px}
+.week{display:grid;gap:10px}
+.wk{display:grid;gap:8px}
+.wk h3{font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;font-family:var(--body)}
+.card{display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;text-align:left;color:inherit;font:inherit;width:100%}
+.card:hover,.card:focus-visible{border-color:var(--gold);outline:none}
+.card.on{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold) inset}
+.card .thumb{width:96px;border-radius:6px;overflow:hidden;align-self:start}
+.card .meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;color:var(--muted)}
+.card .meta span{border:1px solid var(--line);border-radius:999px;padding:1px 8px}
+.card .meta .d{color:var(--gold-ink);border-color:var(--gold);font-weight:600}
+.card h4{font-family:var(--display);font-size:17px;margin:6px 0 4px;line-height:1.2}
+.card .c{font-size:14px;color:var(--fg);white-space:pre-line;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card.on .c{-webkit-line-clamp:unset;display:block}
+.prod{margin-top:8px;font-size:13px;color:var(--muted);display:none;gap:4px}
+.card.on .prod{display:grid}
+.prod b{color:var(--fg);font-weight:600}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:10px}
+.panel h3{font-size:18px}
+.sto{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.sto div{border:1px solid var(--line);border-radius:10px;padding:10px;font-size:13px;display:grid;gap:2px}
+.sto b{font-family:var(--display);font-size:14px}
+ul.pend{margin:0;padding-left:18px;display:grid;gap:4px;font-size:14px}
+@media (prefers-reduced-motion:reduce){.track{transition:none}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Grupo Verssat · Instagram · simulação v2 · 25/11/2026</div>
+    <h1>Como o perfil fica depois de 3 meses</h1>
+    <p>Toque nos posts para abrir as artes e as legendas completas. Os carrosséis passam com as setas; os reels aparecem como roteiro de cenas. Nada foi publicado.</p>
+    <div><span class="flag">Fotos do site são ilustrativas (IA) · posts com pessoa nomeada pedem foto real · números com [confirmar] ainda dependem de você</span></div>
+  </header>
+
+  <div class="cols">
+    <div class="phonecol">
+      <div class="phone" id="phone">
+        <div class="screen" id="screen"></div>
+        <div class="postv" id="postv" hidden></div>
+      </div>
+      <p class="hint">Simulação do app do Instagram no celular</p>
+    </div>
+
+    <section class="ed">
+      <div class="edhead">
+        <div class="eyebrow">Editorial</div>
+        <h2>Os 39 posts de 7/12 a 5/3, em ordem de publicação</h2>
+        <p style="color:var(--muted)">Ritmo de segunda, quarta e sexta. Clique num post para ver a legenda inteira e o que precisa ser produzido.</p>
+      </div>
+      <div class="week" id="weeks"></div>
+
+      <div class="panel">
+        <h3>Stories da semana</h3>
+        <div class="sto">
+          <div><b>Seg</b>Repost do post do dia + caixinha “Qual sua maior dor com portaria?”</div>
+          <div><b>Ter</b>Enquete: “Seu condomínio tem passagem de turno por escrito?”</div>
+          <div><b>Qua</b>Bastidor do dia: 3 stories de um posto, com hora</div>
+          <div><b>Qui</b>Respostas da caixinha de segunda</div>
+          <div><b>Sex</b>Repost + link de WhatsApp com figurinha</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Antes de publicar de verdade</h3>
+        <ul class="pend">
+          <li>Confirmar o @ e se já existe perfil antigo.</li>
+          <li>Cidades de atuação para a bio e a localização dos posts.</li>
+          <li>Prazo real de cobertura de falta (o post 8 usa “em até 2 horas”).</li>
+          <li>Número de colaboradores e de postos por supervisor (posts 5 e 6).</li>
+          <li>Fotos e vídeos reais dos postos, com termo de autorização de imagem.</li>
+          <li>Davi: aqui a polo aparece só com a estrela, porque a original saiu “GRUPO ERSSAT”. Falta decidir a versão final.</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+const EST='img/estrela.png', DAVI='img/davi.webp';
+const ic={
+  grid:'<svg viewBox="0 0 24 24" class="ic"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>',
+  reel:'<svg viewBox="0 0 24 24" class="ic"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M3 8h18M8 3l3 5M14 3l3 5"/><path d="M10 11.5v5l4.5-2.5z" fill="currentColor"/></svg>',
+  tag:'<svg viewBox="0 0 24 24" class="ic"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M6.5 19c1.2-2.6 3.2-4 5.5-4s4.3 1.4 5.5 4"/></svg>',
+  multi:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3h11a3 3 0 0 1 3 3v11h-2V6a1 1 0 0 0-1-1H7z"/><rect x="3" y="7" width="14" height="14" rx="2.5"/></svg>',
+  play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
+  pin:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3l7 7-2.5 1-3.5 3.5.5 4.5-1.5 1.5-4-4L5 21.5 3.5 20l4.5-5-4-4L5.5 9.5 10 10l3.5-3.5z"/></svg>',
+  heart:'<svg viewBox="0 0 24 24" class="ic"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>',
+  com:'<svg viewBox="0 0 24 24" class="ic"><path d="M20 12a8 8 0 1 1-3.3-6.5L21 4l-1.3 4.2A8 8 0 0 1 20 12z"/></svg>',
+  send:'<svg viewBox="0 0 24 24" class="ic"><path d="M21 3L3 10l7 3 3 7z"/><path d="M10 13l11-10"/></svg>',
+  save:'<svg viewBox="0 0 24 24" class="ic"><path d="M6 3h12v18l-6-5-6 5z"/></svg>',
+  home:'<svg viewBox="0 0 24 24" class="ic"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',
+  search:'<svg viewBox="0 0 24 24" class="ic"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>',
+  add:'<svg viewBox="0 0 24 24" class="ic"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 8v8M8 12h8"/></svg>',
+  menu:'<svg viewBox="0 0 24 24" class="ic"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
+  back:'<svg viewBox="0 0 24 24" class="ic" width="24" height="24"><path d="M15 5l-7 7 7 7"/></svg>',
+  cam:'<svg viewBox="0 0 24 24" class="ic"><rect x="3" y="6" width="18" height="14" rx="3"/><circle cx="12" cy="13" r="4"/><path d="M8 6l1.5-2h5L16 6"/></svg>'
+};
+const logo=(t)=>`<div class="logo"><img src="${EST}" alt="">GRUPO VERSSAT</div>`;
+const photo=(desc,img)=>img?`<div class="photo" style="background:#222 url(img/site/${img}.webp) center/cover no-repeat"></div><div class="shade"></div>`:`<div class="photo"><div class="ph">${ic.cam}<span>Foto real a produzir:<br>${desc}</span></div></div><div class="shade"></div>`;
+const flag=o=>o.flag?`<div class="flagart">${o.flag}</div>`:'';
+
+/* modelos de arte */
+const A={
+  cover:(o)=>`<div class="slide ${o.v?'v ':''}${o.th||'dk'}">${o.img?photo('',o.img):''}${flag(o)}<div class="cut ${o.cut||'tl'}"></div><div class="s-in"><div class="ey">${o.ey}</div><div class="t1">${o.t}</div>${o.tx?`<div class="tx">${o.tx}</div>`:''}<div class="spacer"></div></div>${logo()}${o.swipe?'<div class="swipe">arraste →</div>':''}</div>`,
+  item:(o)=>`<div class="slide ${o.th||'lt'}"><div class="cut ${o.cut||'br'}"></div><div class="s-in"><div class="num">${o.n}</div><div class="t2">${o.t}</div><div class="tx">${o.tx}</div><div class="spacer"></div></div>${logo()}</div>`,
+  step:(o)=>`<div class="slide ${o.th||'dk'}"><div class="cut ${o.cut||'br'}"></div><div class="s-in"><div class="ey">${o.ey}</div><div class="clock">${o.h}</div><div class="t2">${o.t}</div><div class="tx">${o.tx}</div><div class="spacer"></div></div>${logo()}</div>`,
+  photo:(o)=>`<div class="slide dk">${photo(o.desc,o.img)}${flag(o)}<div class="s-in"><div class="stamp"><b>${o.h}</b>${o.place}</div><div class="spacer"></div><div class="t2">${o.t}</div></div><div class="cut br"></div>${logo()}</div>`,
+  bignum:(o)=>`<div class="slide dk"><div class="cut band"></div><div class="s-in"><div class="ey">${o.ey}</div><div class="spacer"></div><div class="big">${o.n}</div><div class="t2">${o.t}</div><div class="spacer" style="flex:.9"></div></div>${logo()}</div>`,
+  cta:(o)=>`<div class="slide gd"><div class="cut brg"></div><div class="s-in"><div class="ey">${o.ey}</div><div class="t1">${o.t}</div><div class="tx">${o.tx}</div><span class="pill" style="background:var(--graf);color:var(--gold)">${o.btn}</span><div class="spacer"></div></div>${logo()}</div>`,
+  scene:(o)=>`<div class="slide v ${o.th||'dk'}">${(o.photo||o.img)?photo(o.photo,o.img):''}${flag(o)}<div class="cut ${o.cut||'br'}"></div><div class="s-in"><div class="tc">CENA ${o.i} · ${o.tc}</div>${o.h?`<div class="clock" style="margin-top:6cqw">${o.h}</div>`:''}<div class="t1" style="${o.h?'font-size:8cqw':''}">${o.t}</div>${o.tx?`<div class="tx">${o.tx}</div>`:''}<div class="spacer"></div></div>${logo()}</div>`,
+  davi:(o)=>`<div class="slide ${o.v?'v ':''}${o.th||'dk'}"><div class="cut band"></div><img class="davi" src="${DAVI}" alt="Davi, mascote da Verssat"><div class="s-in">${o.tc?`<div class="tc">${o.tc}</div>`:''}<div class="ey">${o.ey}</div><div class="balloon">${o.t}</div>${o.tx?`<div class="tx" style="max-width:52cqw">${o.tx}</div>`:''}<div class="spacer"></div></div>${logo()}</div>`,
+  star:(o)=>`<div class="slide v dk"><div class="s-in" style="align-items:center;justify-content:center;text-align:center"><div class="tc">CENA ${o.i} · ${o.tc}</div><img src="${EST}" alt="" style="width:56cqw;margin:8cqw 0"><div class="t1">${o.t}</div>${o.tx?`<div class="tx">${o.tx}</div>`:''}</div></div>`
+};
+
+const TAGS='#GrupoVerssat #segurançapatrimonial #portaria #limpezaprofissional #terceirização #condomínio #síndico #facilities';
+const POSTS=[
+ {id:1,sem:1,dia:'Seg',fmt:'Reels 15 s',pilar:'Marca',pin:true,reel:true,cover:4,titulo:'Tudo no lugar. Sempre.',
+  likes:'—',
+  slides:[A.star({i:1,tc:'0–3 s',t:'A estrela se monta',tx:'Animação da abertura do site'}),
+          A.scene({i:2,tc:'3–6 s',t:'Segurança',photo:'vigilante na guarita, à noite',img:'seguranca_14'}),
+          A.scene({i:3,tc:'6–9 s',t:'Portaria',photo:'porteiro recebendo uma entrega',img:'13-portaria'}),
+          A.scene({i:4,tc:'9–12 s',t:'Limpeza',photo:'hall sendo limpo pela manhã',img:'11-equipe-de-limpeza-no-hall'}),
+          A.cover({ey:'@grupoverssat',t:'Tudo no lugar. <span class="gold">Sempre.</span>',tx:'Segurança, portaria e limpeza num só contrato.',cut:'br'}).replace('class="slide ','class="slide v ')],
+  cap:`Enquanto o condomínio dorme, alguém está acordado. Quando a empresa abre as portas, o hall já está limpo e a portaria já sabe quem vai chegar.
+
+Somos o Grupo Verssat: segurança, portaria e limpeza num só contrato, com supervisor em campo e cada visita registrada.
+
+A partir de hoje você vai ver aqui como esse trabalho acontece de verdade.
+
+Tudo no lugar. Sempre.
+Proposta pelo WhatsApp: link na bio.`,
+  cta:'Seguir o perfil',prod:'Animação da estrela (já existe no site) + 3 vídeos de 3 s em postos reais. Trilha instrumental sem direitos.'},
+ {id:2,sem:1,dia:'Qua',fmt:'Carrossel 6',pilar:'Prova',pin:true,titulo:'3 serviços, 1 contrato',
+  slides:[A.cover({ey:'Como funciona',img:'17-trabalhe-conosco-e-sobre',t:'3 serviços.<br><span class="gold">1 contrato.</span>',tx:'E uma pessoa responsável por todos os seus postos.',swipe:true}),
+          A.item({n:'01',t:'Segurança patrimonial',tx:'Vigilantes formados e reciclados. Rondas com horário e registro. Postos 24 h ou por turno.'}),
+          A.item({n:'02',t:'Portaria',tx:'Controle de moradores, visitantes, prestadores e entregas. Passagem de turno por escrito.'}),
+          A.item({n:'03',t:'Limpeza e conservação',tx:'Rotina com checklist por área e por horário. Material e uniforme repostos pelo supervisor.'}),
+          A.step({ey:'O que junta tudo',h:'1',t:'supervisor para o seu contrato',tx:'Ele visita, confere presença, cobre falta e registra cada passagem no celular.'}),
+          A.cta({ey:'Próximo passo',t:'Quer ver isso no seu prédio?',tx:'Conte quantos postos você tem hoje. A gente monta a proposta.',btn:'Chamar no WhatsApp'})],
+  cap:`Contratar segurança com uma empresa, portaria com outra e limpeza com uma terceira parece economia. Na prática são três supervisores, três contratos e ninguém responsável quando algo cai no meio.
+
+Na Verssat é um contrato só:
+→ Segurança patrimonial
+→ Portaria
+→ Limpeza e conservação
+
+E um supervisor que responde por todos os seus postos.
+
+Arraste para ver o que cada serviço inclui. Para uma proposta, chama no WhatsApp da bio.`,
+  cta:'WhatsApp',prod:'Só arte. Revisar a lista final de serviços (recepção, zeladoria, copa entram?).'},
+ {id:3,sem:1,dia:'Sex',fmt:'Foto',pilar:'O turno',titulo:'06:00, troca de turno',
+  slides:[A.photo({img:'01-porteiro-noite-saindo',h:'06:00',place:'Portaria · troca de turno',t:'Quem sai entrega o posto. Quem entra confere tudo.',desc:'dois porteiros fazendo a passagem de turno no balcão'})],
+  cap:`06:00. Troca de turno na portaria.
+
+Antes de ir para casa, quem trabalhou a noite passa para quem chega:
+• o que aconteceu no livro de ocorrências
+• encomendas que ainda não foram retiradas
+• chaves, rádio e controle conferidos
+• prestadores agendados para o dia
+
+Leva cinco minutos e evita a maior parte dos problemas de portaria. Na Verssat, nenhum posto troca de mão sem essa conversa.
+
+Seu condomínio faz passagem de turno por escrito? Conta aqui nos comentários.`,
+  cta:'Comentar',prod:'1 foto real, de manhã, sem rosto de morador e sem fachada identificável. Termo de imagem dos dois porteiros.'},
+ {id:4,sem:2,dia:'Seg',fmt:'Carrossel 7',pilar:'Guia',titulo:'5 sinais na portaria',
+  slides:[A.cover({ey:'Guia do síndico',img:'10-cadastro-de-visitante',t:'5 sinais de que a portaria do seu condomínio <span class="gold">precisa de atenção</span>',swipe:true}),
+          A.item({n:'1',t:'Visitante sobe sem ser anunciado',tx:'Se acontece “só às vezes”, já é rotina. Toda entrada precisa de confirmação do morador.'}),
+          A.item({n:'2',t:'Encomenda sem registro',tx:'Pacote que some vira briga no grupo do prédio. Cada entrega deve ter hora, nome e assinatura na retirada.'}),
+          A.item({n:'3',t:'Ninguém sabe a quem ligar às 3h',tx:'Porteiro precisa de uma lista clara: síndico, zelador, supervisor, polícia, bombeiros, concessionárias.'}),
+          A.item({n:'4',t:'Troca de turno sem conversa',tx:'Quem chega precisa saber o que aconteceu antes. Sem isso, o problema da noite vira surpresa da manhã.'}),
+          A.item({n:'5',t:'Falta coberta no improviso',tx:'Zelador cobrindo portaria ou posto vazio por horas. Falta tem que ter reserva definida em contrato.'}),
+          A.cta({ey:'Marcou 2 ou mais?',t:'Vale uma conversa.',tx:'Salve este post e mande no grupo do conselho.',btn:'Diagnóstico pelo WhatsApp'})],
+  cap:`Portaria boa não chama atenção. Portaria com problema aparece no grupo do prédio toda semana.
+
+Separamos 5 sinais que os síndicos com quem conversamos mais citam. Arraste e veja quantos acontecem no seu condomínio.
+
+Marcou dois ou mais? Salve este post, mande para o conselho e chama a gente no WhatsApp para um diagnóstico sem custo.`,
+  cta:'Salvar e enviar ao conselho',prod:'Só arte. Conferir se o “diagnóstico sem custo” é algo que a Verssat quer oferecer.'},
+ {id:5,sem:2,dia:'Qua',fmt:'Foto',pilar:'Gente',titulo:'Quem cuida do seu posto',
+  slides:[A.photo({img:'03-supervisor-visita',flag:'Ilustrativa: trocar por foto real do supervisor',h:'09:12',place:'Visita do supervisor',t:'Quem cuida do seu posto tem nome.',desc:'supervisor de polo cinza conversando com o porteiro, celular na mão'})],
+  cap:`Este é o [nome], supervisor da Verssat há [X] anos.
+
+Num dia normal ele passa por [X] postos. Em cada um confere presença, uniforme e material, conversa com quem está trabalhando e com o síndico ou gestor, e registra tudo no celular.
+
+Quando alguém falta, é ele quem resolve a cobertura.
+
+É por isso que, na Verssat, o cliente não precisa ligar para uma central e explicar tudo de novo. Ele já sabe com quem falar.`,
+  cta:'Comentar',prod:'Foto real do supervisor (com autorização). Confirmar nome, tempo de casa e quantos postos visita por dia [confirmar].'},
+ {id:6,sem:2,dia:'Sex',fmt:'Imagem',pilar:'Prova',titulo:'60+ postos hoje',
+  slides:[A.bignum({ey:'Hoje, agora',n:'60+',t:'postos atendidos pela Verssat'}),
+          A.step({ey:'Por trás do número',h:'24 h',t:'de supervisão',tx:'[X] colaboradores, escalas fechadas e reserva para cobrir falta. [confirmar]'})],
+  cap:`Mais de 60 postos atendidos hoje.
+
+Isso quer dizer escalas que fecham todo mês, uniformes e materiais repostos, supervisores rodando e reserva pronta para cobrir quem falta.
+
+Número sozinho não diz muito. Nas próximas semanas a gente mostra, posto a posto, como isso funciona.`,
+  cta:'WhatsApp',prod:'Só arte. Confirmar número de colaboradores [confirmar].'},
+ {id:7,sem:3,dia:'Seg',fmt:'Reels 30 s',pilar:'O turno',reel:true,titulo:'Um turno em 30 segundos',
+  slides:[A.scene({i:1,tc:'0–4 s',h:'19:00',t:'Posto assumido',photo:'x',img:'02-porteira-dia-assumindo'}),
+          A.scene({i:2,tc:'4–9 s',h:'21:30',t:'Primeira ronda',photo:'x',img:'seguranca_14'}),
+          A.scene({i:3,tc:'9–14 s',h:'23:10',t:'Entrega fora de hora registrada',photo:'x',img:'07-portaria-com-monitores'}),
+          A.scene({i:4,tc:'14–19 s',h:'01:05',t:'Ocorrência com foto',tx:'Portão da garagem não fechou. Registrado e resolvido.',th:'dk'}),
+          A.scene({i:5,tc:'19–24 s',h:'03:00',t:'Supervisor passa no posto',photo:'x',img:'03-supervisor-visita'}),
+          A.scene({i:6,tc:'24–30 s',h:'07:00',t:'Turno entregue. Relatório pronto.',th:'gd',cut:'brg'})],
+  cap:`Um turno inteiro em 30 segundos.
+
+19:00 posto assumido
+21:30 primeira ronda
+23:10 entrega fora de hora registrada
+01:05 ocorrência com foto
+03:00 supervisor passa no posto [confirmar]
+07:00 turno entregue
+
+Enquanto você dorme, é assim. E fica tudo registrado.`,
+  cta:'Seguir o perfil',prod:'Gravar cenas reais num turno, sem rostos de moradores, placas, câmeras ou rotas de ronda. Confirmar se há supervisão noturna.'},
+ {id:8,sem:3,dia:'Qua',fmt:'Carrossel 6',pilar:'Guia',titulo:'Falta às 22h',
+  slides:[A.cover({ey:'Pergunta que todo síndico faz',img:'06-substituto-chegando-a-noite-maduro-sem-piercing',t:'O porteiro faltou às 22h. <span class="gold">O que acontece?</span>',swipe:true}),
+          A.step({ey:'Passo 1',h:'22:00',t:'A falta aparece na troca de turno',tx:'Quem ia sair avisa na hora. Ninguém deixa o posto vazio.',th:'lt'}),
+          A.step({ey:'Passo 2',h:'22:05',t:'Supervisor aciona a reserva',tx:'Cada região tem colaboradores de reserva já treinados.',th:'lt'}),
+          A.step({ey:'Passo 3',h:'22:10',t:'Você é avisado',tx:'Mensagem ao síndico ou gestor dizendo quem vai cobrir e a que horas chega.',th:'lt'}),
+          A.step({ey:'Passo 4',h:'até 00:00',t:'Posto coberto',tx:'Em até 2 horas o substituto assume. [confirmar prazo]',th:'lt'}),
+          A.cta({ey:'No dia seguinte',t:'Tudo no relatório.',tx:'Falta, cobertura e horário ficam registrados para você conferir.',btn:'Chamar no WhatsApp'})],
+  cap:`É a pergunta que mais ouvimos de síndico: “e se o porteiro faltar de noite?”
+
+Na Verssat, assim:
+22:00 a falta aparece na troca de turno
+22:05 o supervisor aciona a reserva
+22:10 você recebe uma mensagem dizendo quem vai cobrir
+Em até 2 horas o posto está coberto
+
+No dia seguinte, está tudo no relatório.
+
+Se hoje a resposta no seu condomínio é “o zelador segura”, vale conversar.`,
+  cta:'WhatsApp',prod:'Só arte. Confirmar prazo real de cobertura e se o aviso ao cliente já acontece hoje [confirmar].'},
+ {id:10,sem:3,dia:'Sex',fmt:'Reels 10 s',pilar:'Davi',reel:true,titulo:'Oi, eu sou o Davi',
+  slides:[A.davi({v:true,tc:'CENA 1 · 0–4 s',ey:'Prazer',t:'Oi, eu sou o Davi!'}),
+          A.davi({v:true,tc:'CENA 2 · 4–8 s',ey:'O que eu faço aqui',t:'Vou explicar como a gente cuida do seu prédio.',th:'lt'}),
+          A.davi({v:true,tc:'CENA 3 · 8–10 s',ey:'Toda sexta',t:'Manda sua pergunta nos comentários.',th:'gd'})],
+  cap:`Prazer, eu sou o Davi.
+
+Vou aparecer por aqui para explicar, de um jeito simples, o que acontece por trás de uma boa portaria, de uma ronda bem feita e de um prédio sempre limpo.
+
+Tem alguma dúvida sobre segurança, portaria ou limpeza no seu condomínio ou empresa? Deixa nos comentários que eu respondo.`,
+  cta:'Comentar',prod:'Vídeo do Davi acenando (já existe) com a polo corrigida. Aqui a polo foi simulada só com a estrela. Se o Davi não for aprovado, trocar por “Perguntas que todo síndico faz”.'}
+];
+
+const CAL=[
+{id:9,d:'2026-12-25',f:'Foto',p:'Gente',t:'Feliz Natal. Hoje tem gente no posto.',i:'Enquanto você comemora, alguém da Verssat está no posto para o prédio ficar seguro e limpo. Obrigado a cada colaborador que trabalha hoje.',c:'Comentar',img:'12-condominios'},
+{id:11,d:'2026-12-30',f:'Carrossel 6',p:'Guia',t:'Réveillon no condomínio: 6 cuidados',i:'Lista de convidados, salão de festas, som, fogos, garagem e limpeza no dia 1º. Seis cuidados para a virada ser tranquila.',c:'Salvar',img:'07-portaria-com-monitores'},
+{id:12,d:'2027-01-01',f:'Foto',p:'O turno',t:'Primeiro turno do ano',i:'O ano começa às 06:00, com alguém assumindo o posto. Que 2027 seja de tudo no lugar.',c:'Comentar',img:'02-porteira-dia-assumindo'},
+{id:13,d:'2027-01-04',f:'Carrossel 6',p:'Guia',t:'Férias: o que muda na portaria',i:'Prédio vazio pede mais atenção: correspondência acumulada, imóveis fechados, prestadores e chaves deixadas na portaria.',c:'Salvar',img:'09-sindico-conferindo-o-predio'},
+{id:14,d:'2027-01-06',f:'Foto',p:'O turno',t:'07:30, checklist do hall',i:'Antes dos moradores descerem, o hall já está limpo. Cada área tem checklist com horário.',c:'Comentar',img:'11-equipe-de-limpeza-no-hall'},
+{id:15,d:'2027-01-08',f:'Foto',p:'Gente',t:'Um dia com a equipe de limpeza',i:'Quem deixa o prédio pronto antes de todo mundo acordar. Apresentação de uma colaboradora real, com nome e história.',c:'Comentar',img:'limpeza_15',flag:'Ilustrativa: trocar por foto real da colaboradora',real:1},
+{id:16,d:'2027-01-11',f:'Carrossel 8',p:'Guia',t:'7 documentos para exigir de uma terceirizada',i:'Para o gestor de empresa: CNPJ, certidões, autorização da Polícia Federal, encargos em dia, seguro, convenção coletiva e ASO.',c:'Salvar'},
+{id:17,d:'2027-01-13',f:'Reels 20 s',p:'O turno',t:'A ronda da madrugada',i:'03:00. Portões, garagem e áreas comuns conferidos e registrados. Sem rota, sem detalhe que ajude quem não deveria saber.',c:'Seguir',img:'seguranca_14'},
+{id:18,d:'2027-01-15',f:'Foto',p:'Prova',t:'O que o síndico diz',i:'Depoimento real de um síndico cliente, com foto e autorização.',c:'WhatsApp',real:1},
+{id:19,d:'2027-01-18',f:'Carrossel 6',p:'Guia',t:'Entregas e aplicativos: como receber',i:'Registro, guarda, retirada, entregador que quer subir e comida que esfria. Como a portaria deve agir em cada caso.',c:'Salvar',img:'10-cadastro-de-visitante'},
+{id:20,d:'2027-01-20',f:'Foto',p:'O turno',t:'Chaves, rádio e livro',i:'Três coisas que passam de mão em mão em toda troca de turno, e por que nenhuma pode ficar para depois.',c:'Comentar',img:'01-porteiro-noite-saindo'},
+{id:21,d:'2027-01-22',f:'Reels 15 s',p:'Davi',t:'Davi explica: ronda registrada',i:'Ronda registrada é ronda com hora, lugar e prova. O Davi explica em 15 segundos.',c:'Comentar',davi:1},
+{id:22,d:'2027-01-25',f:'Foto',p:'Gente',t:'São Paulo, 473 anos. E a gente no posto.',i:'A cidade dorme e acorda com gente cuidando dela. Parabéns, São Paulo. [confirmar cidades]',c:'Comentar',img:'05-gestor-empresa-card'},
+{id:23,d:'2027-01-27',f:'Carrossel 6',p:'Guia',t:'Limpeza: a frequência certa por área',i:'Hall, elevador, garagem, academia, salão e lixeira: o que é diário, semanal e mensal.',c:'Salvar',img:'limpeza_15'},
+{id:24,d:'2027-01-29',f:'Carrossel 4',p:'Prova',t:'Antes e depois: garagem',i:'Limpeza pesada de garagem, com fotos reais e autorização do cliente.',c:'WhatsApp'},
+{id:25,d:'2027-02-01',f:'Foto',p:'Gente',t:'Reciclagem: vigilante também estuda',i:'Atualização constante da equipe: procedimentos, atendimento e primeiros socorros.',c:'Comentar',img:'08-aula-da-academia'},
+{id:26,d:'2027-02-03',f:'Carrossel 6',p:'Guia',t:'Carnaval no condomínio',i:'Festa no salão, som alto, visitantes, garagem lotada e escala de folga. O que combinar antes do feriado.',c:'Salvar',img:'12-condominios'},
+{id:27,d:'2027-02-05',f:'Foto',p:'O turno',t:'Escala de Carnaval fechada',i:'Feriado não deixa posto vazio. A escala é fechada antes, com reserva definida.',c:'Comentar',img:'03-supervisor-visita'},
+{id:28,d:'2027-02-08',f:'Reels 15 s',p:'O turno',t:'Enquanto a cidade pula Carnaval',i:'Lá fora tem festa. Aqui dentro, tudo no lugar.',c:'Seguir',img:'06-substituto-chegando-a-noite-maduro-sem-piercing'},
+{id:29,d:'2027-02-10',f:'Carrossel 5',p:'Prova',t:'O relatório que o síndico recebe',i:'Visitas, faltas cobertas e ocorrências do mês num relatório só. Exemplo com selo de demonstração.',c:'WhatsApp'},
+{id:30,d:'2027-02-12',f:'Foto',p:'Gente',t:'Orgulho de vestir a farda',i:'Quem trabalha com a gente conta por que fica. Vagas abertas estão no destaque Vagas.',c:'Comentar',img:'17-trabalhe-conosco-e-sobre'},
+{id:31,d:'2027-02-15',f:'Carrossel 7',p:'Guia',t:'5 cláusulas para terceirizar sem dor de cabeça',i:'Cobertura de falta, substituição, supervisão, relatórios e reajuste. O que precisa estar no contrato.',c:'Salvar'},
+{id:32,d:'2027-02-17',f:'Foto',p:'O turno',t:'08:00, recepção corporativa',i:'O primeiro atendimento do dia na empresa: crachá, agenda de visitantes e controle de acesso.',c:'Comentar',img:'empresas_16'},
+{id:33,d:'2027-02-19',f:'Reels 20 s',p:'Davi',t:'Davi responde os comentários',i:'O Davi responde três perguntas deixadas no perfil.',c:'Comentar',davi:1},
+{id:34,d:'2027-02-22',f:'Carrossel 6',p:'Guia',t:'4 golpes comuns na portaria',i:'Falso entregador, falso técnico, “o morador autorizou” e visita sem confirmação. Como a portaria evita cada um.',c:'Salvar e enviar',img:'13-portaria'},
+{id:35,d:'2027-02-24',f:'Foto',p:'O turno',t:'Entre um posto e outro',i:'O supervisor em deslocamento: visitas do dia e mensagens dos clientes, sem precisar de central.',c:'Comentar',img:'05-gestor-empresa-card'},
+{id:36,d:'2027-02-26',f:'Imagem',p:'Prova',t:'Fevereiro em números',i:'Visitas de supervisão, faltas cobertas e ocorrências resolvidas no mês. [confirmar números]',c:'WhatsApp'},
+{id:37,d:'2027-03-01',f:'Foto',p:'Gente',t:'Mais de 5 anos de casa',i:'Homenagem a quem está com a gente há mais tempo, com nome e foto real.',c:'Comentar',img:'01-porteiro-noite-saindo',flag:'Ilustrativa: trocar por foto real do colaborador',real:1},
+{id:38,d:'2027-03-03',f:'Carrossel 6',p:'Guia',t:'Trocar de fornecedor sem deixar o prédio descoberto',i:'Transição em 30 dias: levantamento, escala, sobreposição de equipes e apresentação aos moradores.',c:'WhatsApp',img:'04-sindica-card'},
+{id:39,d:'2027-03-05',f:'Reels 20 s',p:'Marca',t:'Três meses de Tudo no lugar',i:'Os melhores momentos destes três meses, e um convite para conversar.',c:'WhatsApp',img:'17-trabalhe-conosco-e-sobre'}
+];
+const CTA={WhatsApp:'Proposta pelo WhatsApp: link na bio.',Salvar:'Salve este post para consultar depois.','Salvar e enviar':'Salve e mande no grupo do prédio.',Comentar:'Conta pra gente nos comentários.',Seguir:'Siga o perfil para ver o próximo turno.'};
+const THS=['dk','lt','gd'];
+CAL.forEach((x,k)=>{
+  const reel=x.f.startsWith('Reels'), car=x.f.startsWith('Carrossel');
+  let sl=[];
+  if(x.davi){sl=[A.davi({v:true,tc:'CENA 1',ey:'Davi explica',t:x.t}),A.davi({v:true,tc:'CENA 2',ey:'Davi explica',t:x.i.split('.')[0]+'.',th:'lt'})]}
+  else if(reel){sl=[A.scene({i:1,tc:'capa',t:x.t,img:x.img}),A.cover({v:true,ey:'Fechamento',t:'Tudo no lugar. <span class="gold">Sempre.</span>',cut:'br'})]}
+  else if(x.f==='Imagem'){sl=[A.bignum({ey:x.p,n:'—',t:x.t+' [confirmar]'})]}
+  else if(x.img){sl=[A.cover({ey:x.p,t:x.t,img:x.img,flag:x.flag,swipe:car,cut:'br'})]}
+  else if(x.real){sl=[A.photo({h:'Depoimento',place:'cliente real',t:x.t,desc:'foto real do síndico, com autorização'})]}
+  else{sl=[A.cover({ey:x.p,t:x.t,th:THS[k%3],swipe:car})]}
+  if(car){sl.push(A.item({n:'01',t:'Em resumo',tx:x.i}));sl.push(A.cta({ey:'Próximo passo',t:x.c.startsWith('Salvar')?'Salve e compartilhe.':'Vamos conversar?',tx:CTA[x.c]||'',btn:x.c==='WhatsApp'?'Chamar no WhatsApp':x.c}))}
+  POSTS.push({id:x.id,d:x.d,fmt:x.f,pilar:x.p,reel,titulo:x.t,slides:sl,
+    cap:`${x.t}\n\n${x.i}\n\n${CTA[x.c]||''}${x.img&&!x.real?'\n\nImagem ilustrativa.':''}`,
+    cta:x.c,prod:x.real?'Foto real obrigatória: a imagem aqui é só ilustrativa.':x.davi?'Vídeo do Davi com a polo corrigida.':x.img?'Imagem do site (gerada por IA): marcar como ilustrativa.':'Só arte da marca, sem foto.'});
+});
+const D0={1:'2026-12-07',2:'2026-12-09',3:'2026-12-11',4:'2026-12-14',5:'2026-12-16',6:'2026-12-18',7:'2026-12-21',8:'2026-12-23',10:'2026-12-28'};
+const DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const pd=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const START=pd('2026-12-07');
+POSTS.forEach(p=>{p.d=p.d||D0[p.id];const dt=pd(p.d);p.dt=dt;p.dia=DIAS[dt.getDay()]+' '+String(dt.getDate()).padStart(2,'0')+'/'+String(dt.getMonth()+1).padStart(2,'0');p.sem=Math.floor((dt-START)/(7*864e5))+1});
+POSTS.sort((a,b)=>a.id-b.id);
+
+const ORDER=[1,2,...POSTS.map(p=>p.id).filter(i=>i>2).sort((a,b)=>b-a)];
+const byId=Object.fromEntries(POSTS.map(p=>[p.id,p]));
+const screen=document.getElementById('screen'), postv=document.getElementById('postv');
+let tab='grid';
+
+function tileHTML(p,reelView){
+  const s=p.slides[p.cover||0];
+  return `<button class="tile" data-id="${p.id}" aria-label="Abrir post ${p.id}: ${p.titulo}"><div class="art">${s}</div>${p.reel?`<span class="badge">${ic.play}</span>`:(p.slides.length>1?`<span class="badge">${ic.multi}</span>`:'')}${p.pin&&!reelView?`<span class="pinb">${ic.pin}</span>`:''}</button>`;
+}
+function profile(){
+  const list=tab==='reels'?ORDER.map(i=>byId[i]).filter(p=>p.reel):ORDER.map(i=>byId[i]);
+  screen.innerHTML=`
+  <div class="bar"><div class="u">grupoverssat <span class="verified" title="selo apenas ilustrativo">✓</span></div><div class="u">${ic.add}${ic.menu}</div></div>
+  <div class="prof">
+    <div class="prow"><div class="ava"><div><img src="${EST}" alt="Logo Verssat"></div></div>
+      <div class="stats"><div><b>${POSTS.length}</b>posts</div><div><b>—</b>seguidores</div><div><b>—</b>seguindo</div></div></div>
+    <div><div class="nm">Grupo Verssat | Segurança, Portaria e Limpeza</div><div class="cat">Serviços de segurança</div>
+    <div class="bio">Segurança, portaria e limpeza num só contrato.
+Supervisor em campo, cada visita registrada.
+60+ postos atendidos · Tudo no lugar. Sempre.</div>
+    <div class="lnk">grupoverssat.com.br/proposta</div></div>
+    <div class="btns"><button class="btn">Seguir</button><button class="btn">Mensagem</button><button class="btn">WhatsApp</button></div>
+    <div class="hls">${[['SV','Serviços'],['CD','Condomínio'],['EP','Empresa'],['24h','Bastidores'],['★','Davi'],['VG','Vagas']].map(h=>`<button class="hl" type="button"><i><span>${h[0]}</span></i>${h[1]}</button>`).join('')}</div>
+  </div>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="grid" aria-selected="${tab==='grid'}" aria-label="Posts">${ic.grid}</button>
+    <button class="tab" role="tab" data-tab="reels" aria-selected="${tab==='reels'}" aria-label="Reels">${ic.reel}</button>
+    <button class="tab" role="tab" data-tab="tag" aria-selected="false" aria-label="Marcados">${ic.tag}</button>
+  </div>
+  <div class="grid ${tab==='reels'?'reels':''}">${list.map(p=>tileHTML(p,tab==='reels')).join('')}</div>
+  <div class="nav">${ic.home}${ic.search}${ic.add}${ic.reel}<div class="mini" style="width:26px;height:26px"><img src="${EST}" alt=""></div></div>`;
+}
+let cur=0, open=null;
+function openPost(id){
+  const p=byId[id]; open=p; cur=0;
+  postv.innerHTML=`
+  <div class="bar"><button class="back" id="back" aria-label="Voltar ao perfil">${ic.back}</button><span>${p.reel?'Reels':'Publicações'}</span><span style="width:24px"></span></div>
+  <div class="phead"><div class="mini"><img src="${EST}" alt=""></div><div>grupoverssat<small>${p.reel?'Roteiro do reels · cenas':'São Paulo [confirmar cidade]'}</small></div></div>
+  <div class="carousel"><div class="track" id="track">${p.slides.join('')}</div>
+    ${p.slides.length>1?`<button class="arrow l" id="pv" aria-label="Anterior">‹</button><button class="arrow r" id="nx" aria-label="Próximo">›</button><span class="count" id="cnt"></span>`:''}</div>
+  ${p.slides.length>1?`<div class="dots" id="dots">${p.slides.map(()=>'<i></i>').join('')}</div>`:'<div style="height:8px"></div>'}
+  ${p.reel?'<div class="reelnote">No app isto é um vídeo. Aqui cada tela é uma cena do roteiro.</div>':''}
+  <div class="acts">${ic.heart}${ic.com}${ic.send}<span class="sp"></span>${ic.save}</div>
+  <div class="cap"><b>grupoverssat</b> ${esc(p.cap)}
+
+<span class="tags">${TAGS}</span></div>
+  <div class="when">${p.dia}, semana ${p.sem} · ${p.fmt}</div>`;
+  postv.hidden=false; postv.scrollTop=0;
+  upd();
+  postv.querySelector('#back').onclick=closePost;
+  const pv=postv.querySelector('#pv'),nx=postv.querySelector('#nx');
+  if(pv){pv.onclick=()=>{cur=Math.max(0,cur-1);upd()};nx.onclick=()=>{cur=Math.min(p.slides.length-1,cur+1);upd()}}
+  let x0=null;const tr=postv.querySelector('.carousel');
+  tr.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});
+  tr.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>40){cur=Math.max(0,Math.min(p.slides.length-1,cur+(dx<0?1:-1)));upd()}x0=null});
+  document.querySelectorAll('.card').forEach(c=>c.classList.toggle('on',+c.dataset.id===id));
+}
+function upd(){
+  const p=open; postv.querySelector('#track').style.transform=`translateX(-${cur*100}%)`;
+  const c=postv.querySelector('#cnt'); if(c)c.textContent=`${cur+1}/${p.slides.length}`;
+  postv.querySelectorAll('#dots i').forEach((d,i)=>d.classList.toggle('on',i===cur));
+  const pv=postv.querySelector('#pv'),nx=postv.querySelector('#nx');
+  if(pv){pv.hidden=cur===0;nx.hidden=cur===p.slides.length-1}
+}
+function closePost(){postv.hidden=true;open=null;document.querySelectorAll('.card').forEach(c=>c.classList.remove('on'))}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\[([^\]]+)\]/g,'<span style="color:var(--warn);font-weight:600">[$1]</span>')}
+
+screen.addEventListener('click',e=>{
+  const t=e.target.closest('.tile'); if(t){openPost(+t.dataset.id);return}
+  const tb=e.target.closest('.tab'); if(tb&&tb.dataset.tab!=='tag'){tab=tb.dataset.tab;profile()}
+});
+document.addEventListener('keydown',e=>{
+  if(!open)return;
+  if(e.key==='Escape')closePost();
+  if(e.key==='ArrowRight'&&cur<open.slides.length-1){cur++;upd()}
+  if(e.key==='ArrowLeft'&&cur>0){cur--;upd()}
+});
+
+/* editorial */
+const weeks=document.getElementById('weeks');
+[...new Set(POSTS.map(p=>p.sem))].forEach(w=>{
+  const ps=POSTS.filter(p=>p.sem===w);
+  weeks.insertAdjacentHTML('beforeend',`<div class="wk"><h3>Semana ${w} · ${ps[0].dia.slice(4)}</h3>${ps.map(p=>`
+    <button class="card" data-id="${p.id}">
+      <div class="thumb">${p.slides[p.cover||0]}</div>
+      <div style="min-width:0">
+        <div class="meta"><span class="d">${p.dia} · post ${p.id}</span>${p.slides.some(x=>x.includes('img/site/'))?'<span>foto do site</span>':''}<span>${p.fmt}</span><span>${p.pilar}</span>${p.pin?'<span>fixado</span>':''}</div>
+        <h4>${p.titulo}</h4>
+        <div class="c">${esc(p.cap)}</div>
+        <div class="prod"><div><b>Chamada:</b> ${p.cta}</div><div><b>Produção:</b> ${esc(p.prod)}</div></div>
+      </div>
+    </button>`).join('')}</div>`);
+});
+weeks.addEventListener('click',e=>{
+  const c=e.target.closest('.card'); if(!c)return;
+  const id=+c.dataset.id;
+  if(open&&open.id===id){closePost();return}
+  openPost(id);
+  if(window.matchMedia('(max-width:900px)').matches)document.getElementById('phone').scrollIntoView({behavior:'smooth',block:'start'});
+});
+profile();
+</script>
+
+</body>
+</html>
